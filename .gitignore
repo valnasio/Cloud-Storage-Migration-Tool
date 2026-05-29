@@ -1,6 +1,5 @@
 node_modules/
 dist/
-cloud-migrator-linux
-cloud-migrator-win.exe
+cloud-migrator
 *.env
 .DS_Store
