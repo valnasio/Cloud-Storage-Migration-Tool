@@ -47,6 +47,22 @@ Como o Cloud Migrator lidará com o cerne de seus dados, desenhamos salvaguardas
 2. **Segurança de Memória Interna:** O processamento interno passa diretamente via memória. Os arquivos não são salvos fisicamente no seu computador para depois serem enviados; minimizamos assim riscos de roubo local ou disco lotado (No Disk Caching).
 3. **Validação de Sobreposição (Skip Existing):** Validação técnica em *Metadata/Headers* via protocolo HTTP (`HEAD Object`). Garante economia extrema de tempo e rede ao ignorar e não sobrescrever arquivos idênticos já migrados.
 
+### Credenciais Necessárias (Como Obter)
+
+Antes de iniciar a migração, você precisará coletar alguns dados de acesso diretamente no painel administrativo de cada provedor. Abaixo está o caminho rápido:
+
+- **AWS S3 e Compatíveis (R2, MinIO, DigitalOcean, etc):**
+  Você precisará do **Nome do Bucket**, **Access Key ID** e **Secret Access Key**. Na AWS, você gera essas chaves no painel IAM. Em plataformas como Cloudflare R2 ou DigitalOcean, gere-as na tela de API/Tokens. Caso não seja a AWS, você também precisará da URL de **Endpoint S3** fornecida pelo seu provedor.
+  
+- **Google Cloud Storage (GCS):**
+  Tenha em mãos o **Nome do Bucket**, o **Project ID** e o seu **Arquivo JSON de Credenciais**. Crie uma *Service Account* com permissão de Storage Admin no console do Google Cloud (IAM & Admin) e exporte a chave em formato JSON.
+
+- **Azure Blob Storage:**
+  Você precisará do nome do **Container (Bucket)** e do **Storage Account Name**. Como senha, você pode usar uma **Account Key**, um **SAS Token** ou uma **Connection String**, todos localizados na aba *Security + networking > Access keys* do seu portal Azure.
+
+- **Oracle Cloud (OCI):**
+  A OCI possui o sistema mais estrito. Além do **Bucket**, você precisará do **Namespace** (presente nos detalhes do seu bucket) e das suas credenciais de usuário: **Tenancy OCID**, **User OCID**, **Região**, **Fingerprint** e a sua **Chave Privada PEM**. Você os gera no console da Oracle, indo no seu Perfil de Usuário > *API Keys*.
+
 ### Como Baixar e Usar (Release v1.0.0)
 
 A aplicação foi feita para rodar sozinha. Você **não** precisa ser desenvolvedor para utilizá-la; basta baixar e iniciar no terminal.
@@ -139,6 +155,22 @@ Because Cloud Migrator will handle the core of your data, we have designed essen
 1. **Dry Run Mode (Simulation Mode):** If enabled by the user, the software lists the actions to take but cancels the execution trigger. *Technical note: This is a validation of the provider's API calls (Read/List), mitigating potential catastrophic credential errors before affecting network packets and hours of transfers.*
 2. **Internal Memory Security:** Internal processing passes directly through memory. Files are not physically saved on your computer before being sent; thus, we minimize local theft risks or full disks (No Disk Caching).
 3. **Overwrite Validation (Skip Existing):** Technical validation on *Metadata/Headers* via HTTP protocol (`HEAD Object`). It guarantees extreme time and network savings by ignoring and not overwriting identical already-migrated files.
+
+### Required Credentials (How to Get Them)
+
+Before starting the migration, you will need to gather some access data directly from each provider's administrative panel. Here is the quick path:
+
+- **AWS S3 and Compatibles (R2, MinIO, DigitalOcean, etc):**
+  You will need the **Bucket Name**, **Access Key ID**, and **Secret Access Key**. On AWS, generate these keys in the IAM panel. On platforms like Cloudflare R2 or DigitalOcean, generate them on the API/Tokens screen. If it is not AWS, you will also need the provided **S3 Endpoint** URL.
+  
+- **Google Cloud Storage (GCS):**
+  Have your **Bucket Name**, **Project ID**, and your **JSON Credentials File** ready. Create a *Service Account* with Storage Admin permissions in the Google Cloud console (IAM & Admin) and export the key in JSON format.
+
+- **Azure Blob Storage:**
+  You will need the **Container (Bucket)** name and the **Storage Account Name**. For the password, you can use an **Account Key**, a **SAS Token**, or a **Connection String**, all located in the *Security + networking > Access keys* tab of your Azure portal.
+
+- **Oracle Cloud (OCI):**
+  OCI has the strictest system. Besides the **Bucket**, you will need the **Namespace** (found in your bucket details) and your user credentials: **Tenancy OCID**, **User OCID**, **Region**, **Fingerprint**, and your **Private Key PEM**. You generate these in the Oracle console by going to your User Profile > *API Keys*.
 
 ### How to Download and Use (Release v1.0.0)
 
