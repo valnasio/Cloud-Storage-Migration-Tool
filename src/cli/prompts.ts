@@ -19,26 +19,34 @@ async function promptS3Compatible(
     label: string
 ): Promise<AnyProviderConfig> {
     const endpointRequired = ["r2", "minio", "backblaze", "wasabi", "digitalocean", "linode"].includes(type);
+    
+    // Nomenclaturas específicas para não confundir o usuário
+    let bucketTerm = "bucket";
+    if (type === "digitalocean") bucketTerm = "Space (nome do bucket)";
+    else if (type === "r2") bucketTerm = "bucket R2";
+    else if (type === "minio") bucketTerm = "bucket MinIO";
 
     const answers = await inquirer.prompt([
         {
             type: "input",
             name: "bucket",
-            message: `[${label}] Nome do bucket:`,
+            message: `[${label}] Nome do ${bucketTerm}:`,
             validate: (v: string) => (v ? true : "Obrigatório"),
         },
         {
             type: "input",
             name: "region",
-            message: `[${label}] Região (ex: us-east-1, auto):`,
-            default: type === "r2" ? "auto" : "us-east-1",
+            message: `[${label}] Região (ex: us-east-1):`,
+            default: "us-east-1",
+            // R2, MinIO e Backblaze não exigem preenchimento manual de região na maioria dos casos
+            when: () => !["r2", "minio", "backblaze"].includes(type),
         },
         ...(endpointRequired
             ? [
                 {
                     type: "input",
                     name: "endpoint",
-                    message: `[${label}] Endpoint S3 completo (ex: https://xxxx.r2.cloudflarestorage.com):`,
+                    message: `[${label}] Endpoint URL completo (fornecido pelo provedor):`,
                     validate: (v: string) => (v ? true : "Obrigatório"),
                 },
             ]
@@ -63,6 +71,9 @@ async function promptS3Compatible(
             default: "",
         },
     ]);
+
+    // Garante que a região não fique vazia nos provedores que pularam a pergunta
+    if (!answers.region) answers.region = "auto";
 
     return { type, label, ...answers } as AnyProviderConfig;
 }
